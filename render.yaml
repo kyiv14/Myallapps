@@ -1,6 +1,6 @@
 
 services:
-  - type: worker
+  - type: background
     name: telegram-bot
     runtime: python
     buildCommand: ""
