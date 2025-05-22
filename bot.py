@@ -5,7 +5,6 @@ from io import BytesIO
 from telegram import Update, InputFile
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import csv
-import asyncio
 import cv2
 import numpy as np
 from PIL import Image
@@ -82,17 +81,11 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("QR-код не распознан")
 
-async def main():
+if __name__ == '__main__':
     import os
-    TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_TOKEN_HERE")
-    app = ApplicationBuilder().token(TOKEN).build()
+    app = ApplicationBuilder().token(os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_TOKEN_HERE")).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     print("Бот запущен...")
-    await app.run_polling()
-
-if __name__ == '__main__':
-    import asyncio
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    app.run_polling()
